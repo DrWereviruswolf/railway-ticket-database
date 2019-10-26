@@ -1,2 +1,2 @@
 # railway-ticket-database
-A web application based on database imitating 12306 (China Railway)
+A database implementation of 12306 (China Railway)
