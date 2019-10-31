@@ -9,7 +9,7 @@ CREATE TYPE TrainType as enum(
     '0'
 );
 
-CREATE TYPE Privilege as enum(
+CREATE TYPE Access as enum(
     'Passenger',
     'Administrator'
 );
@@ -21,7 +21,16 @@ CREATE TYPE Status as enum(
     'Finished',
     'Cancelled'
 );
---TODO
+
+CREATE TYPE SeatType as enum(
+    'hard_seat',
+    'soft_seat',
+    'hard_upper', 
+    'hard_medium', 
+    'hard_lower', 
+    'soft_upper',
+    'soft_lower'
+);
 
 CREATE TABLE Train(
     tid       CHAR(6),
@@ -43,7 +52,7 @@ CREATE TABLE Station(
 CREATE TABLE TrainSchedule(
     ts_tid             CHAR(6),
     ts_sid             INTEGER,
-    ts_seat_type       VARCHAR(8),
+    ts_seat_type       SeatType,
     ts_arrival_time    TIME,
     ts_part_time       TIME,
     ts_price           DECIMAL(18, 2),
@@ -56,7 +65,7 @@ CREATE TABLE TrainSchedule(
 CREATE TABLE TrainByDate(
     tbd_tid             CHAR(6),
     tbd_sid             INTEGER,
-    tbd_seat_type       VARCHAR(8),
+    tbd_seat_type       SeatType,
     tbd_part_date       DATE,
     tbd_seat_left       INTEGER,
     FOREIGN KEY (tbd_tid, tbd_sid, tbd_seat_type) REFERENCES TrainSchedule(ts_tid, ts_sid, ts_seat_type),
@@ -71,7 +80,7 @@ CREATE TABLE User (
     u_credit        CHAR(16),
     u_nickname      VARCHAR(20),
     u_account       DECIMAL(18, 2),
-    u_access        Privilege
+    u_access        Access
 );
 
 CREATE TABLE Reservation (
@@ -80,7 +89,7 @@ CREATE TABLE Reservation (
   r_tid         CHAR(6),
   r_part_sid    INTEGER,
   r_arrival_sid INTEGER,
-  r_seat_type   VARCHAR(8),
+  r_seat_type   SeatType,
   r_part_date   DATE,
   r_status      Status,
   FOREIGN KEY (r_uid)           REFERENCES User(u_uid),
