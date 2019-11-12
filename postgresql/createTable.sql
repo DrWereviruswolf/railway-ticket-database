@@ -61,6 +61,25 @@ CREATE TABLE TrainSchedule(
     PRIMARY KEY (ts_tid, ts_sid, ts_seat_type)
 );
 
+CREATE TABLE Schedule(
+    sc_tid              CHAR(6),
+    sc_sid              INTEGER,
+    sc_arrival_time     TIME,
+    sc_part_time        TIME,
+    PRIMARY KEY (sc_tid, sc_sid),
+    FOREIGN KEY (sc_tid) REFERENCES Train(tid),
+    FOREIGN KEY (sc_sid) REFERENCES Station(s_sid)  
+);
+
+CREATE TABLE Price(
+    p_tid               CHAR(6),
+    p_sid               INTEGER,
+    p_seat_type         SeatType,
+    p_price             DECIMAL(18, 2),
+    FOREIGN KEY (p_tid) REFERENCES Train(tid),
+    FOREIGN KEY (p_sid) REFERENCES Station(s_sid),
+    PRIMARY KEY (p_tid, p_sid, p_seat_type)
+);
 --Dynamic data
 CREATE TABLE TrainByDate(
     tbd_tid             CHAR(6),
