@@ -33,8 +33,8 @@ CREATE TYPE SeatType as enum(
 );
 
 CREATE TABLE Train(
-    tid       CHAR(6),
-    tname     TrainType,
+    tid       CHAR(6) PRIMARY KEY,
+    tname     TrainType
 );
 --WARNING
 
@@ -56,7 +56,7 @@ CREATE TABLE TrainSchedule(
     ts_arrival_time    TIME,
     ts_part_time       TIME,
     ts_price           DECIMAL(18, 2),
-    FOREIGN KEY (ts_tid) REFERENCES Train(t_tid),
+    FOREIGN KEY (ts_tid) REFERENCES Train(tid),
     FOREIGN KEY (ts_sid) REFERENCES Station(s_sid),
     PRIMARY KEY (ts_tid, ts_sid, ts_seat_type)
 );
@@ -72,7 +72,7 @@ CREATE TABLE TrainByDate(
     PRIMARY KEY (tbd_tid, tbd_sid, tbd_seat_type, tbd_part_date)
 );
 
-CREATE TABLE User (
+CREATE TABLE WebUser(
     u_uid           INTEGER PRIMARY KEY,
     u_fullname      VARCHAR(20),
     u_idcard        CHAR(18),
@@ -92,8 +92,8 @@ CREATE TABLE Reservation (
   r_seat_type   SeatType,
   r_part_date   DATE,
   r_status      Status,
-  FOREIGN KEY (r_uid)           REFERENCES User(u_uid),
+  FOREIGN KEY (r_uid)           REFERENCES WebUser(u_uid),
   FOREIGN KEY (r_tid)           REFERENCES Train(tid),
-  FOREIGN KEY (r_part_sid)      REFERENCES Station(sid),
-  FOREIGN KEY (r_arrival_sid)   REFERENCES Station(sid)
+  FOREIGN KEY (r_part_sid)      REFERENCES Station(s_sid),
+  FOREIGN KEY (r_arrival_sid)   REFERENCES Station(s_sid)
 );
