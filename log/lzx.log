@@ -5,3 +5,12 @@
 
 
 python 改csv;
+
+ok:
+station
+reservation empty
+webuser empty
+
+todo:
+trainschedule
+trainbydate
