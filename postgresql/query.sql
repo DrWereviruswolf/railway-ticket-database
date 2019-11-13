@@ -161,3 +161,19 @@ ORDER BY Train1.temp_arrival_price - Train1.temp_part_price + Train2.temp_arriva
   END
 ))), Train1.temp_part_time
 LIMIT 10;
+
+SELECT tid, SUM(count)
+FROM ((
+  SELECT r_tid AS tid, COUNT(r_rid) AS count
+  FROM Reservation
+  WHERE r_tid IS NOT NULL
+  GROUP BY r_tid
+) UNION (
+  SELECT r_tid2 AS tid, COUNT(r_rid) AS count
+  FROM Reservation
+  WHERE r_tid2 IS NOT NULL
+  GROUP BY r_tid2
+)) AS Temp
+GROUP BY tid
+ORDER BY SUM(count) DESC
+LIMIT 10;

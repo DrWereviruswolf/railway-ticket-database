@@ -85,18 +85,37 @@ CREATE TABLE WebUser(
 );
 
 CREATE TABLE Reservation (
-  r_rid             VARCHAR(32) PRIMARY KEY,
-  r_uid             INTEGER,
-  r_tid             CHAR(6),
-  r_part_sname      VARCHAR(20),
-  r_arrival_sname   VARCHAR(20),
-  r_seat_type       SeatType,
-  r_part_date       DATE,
-  r_status          Status,
-  FOREIGN KEY (r_uid)             REFERENCES WebUser(u_uid),
-  FOREIGN KEY (r_part_sname)      REFERENCES Station(s_sname),
-  FOREIGN KEY (r_arrival_sname)   REFERENCES Station(s_sname)
+  r_rid               VARCHAR(32) PRIMARY KEY,
+  r_uid               VARCHAR(32),
+  r_tid               CHAR(6),
+  r_tid2              CHAR(6),
+  r_part_date         DATE,
+  r_part_sname        VARCHAR(20),
+  r_part_time         TIME,
+  r_arrival_sname     VARCHAR(20),
+  r_arrival_time      TIME,
+  r_part_date2        DATE,
+  r_part_sname2       VARCHAR(20),
+  r_part_time2        TIME,
+  r_arrival_sname2    VARCHAR(20),
+  r_arrival_time2     TIME,
+  r_seat_type         SeatType,
+  r_seat_type2        SeatType,
+  r_price             DECIMAL(18, 2),
+  r_status            Status,
+  FOREIGN KEY (r_uid)             REFERENCES WebUser(u_uid)
 );
+
+SELECT ts_sname, ts_arrival_time, ts_part_time, ts_price, (
+  SELECT MIN(tbd_seat_left)
+  FROM TrainSchedule AS TS2, TrainByDate
+  WHERE tbd_tid = TS1.ts_tid AND TS2.ts_seat_type = TS1.ts_seat_type
+  AND tbd_part_date = DATE '2019-11-15' AND TS2.ts_order < TS1.ts_order
+) AS temp_seat_left
+FROM TrainSchedule AS TS1, TrainByDate
+WHERE tbd_tid = ts_tid AND tbd_sname = ts_sname AND tbd_seat_type = ts_seat_type
+AND tbd_tid = 'G101' AND tbd_part_date = DATE '2019-11-15' AND tbd_seat_type = 'hard_seat'
+ORDER BY TS1.ts_order;
 
 SELECT P.ts_tid AS temp_tid, P.ts_seat_type AS temp_seat_type, P.ts_part_time AS temp_part_time,
 A.ts_arrival_time AS temp_arrival_time, P.ts_price AS temp_part_price, A.ts_price AS temp_arrival_price,
